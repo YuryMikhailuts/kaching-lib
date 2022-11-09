@@ -15,7 +15,7 @@ interface ICache<TKey, TValue> {
 	val onUpdate: SharedFlow<Pair<TKey, TValue>>
 	val onDrop: SharedFlow<Pair<TKey, TValue>>
 	suspend fun get(key: TKey): TValue
-	fun clear()
-	fun drop(key: TKey): TValue?
+	suspend fun clear()
+	suspend fun drop(key: TKey): TValue?
 }
 
