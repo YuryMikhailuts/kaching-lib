@@ -1,5 +1,6 @@
 package mikhaylutsyury.kachinglib
 
+import kotlinx.coroutines.runBlocking
 import java.util.TreeSet as JTreeSet
 
 actual open class TreeSet<out E : Comparable<@UnsafeVariance E>> private constructor(

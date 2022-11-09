@@ -28,8 +28,8 @@ class TimedCache<TKey, TValue>(
 	override val cached: Iterable<Pair<TKey, TValue>> get() = map.toList()
 	override val cachedValues: Iterable<TValue> get() = ArrayList(map.values)
 	override val cachedKeys: Iterable<TKey> get() = ArrayList(map.keys)
-	override val onUpdate = MutableSharedFlow<Pair<TKey, TValue>>(0, 0, BufferOverflow.DROP_OLDEST)
-	override val onDrop = MutableSharedFlow<Pair<TKey, TValue>>(0, 0, BufferOverflow.DROP_OLDEST)
+	override val onUpdate = MutableSharedFlow<Pair<TKey, TValue>>(0, 1, BufferOverflow.DROP_OLDEST)
+	override val onDrop = MutableSharedFlow<Pair<TKey, TValue>>(0, 1, BufferOverflow.DROP_OLDEST)
 	override suspend fun clear() {
 		mutex.withLock {
 			map.clear()
