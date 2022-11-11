@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalContracts::class)
-
 package mikhaylutsyury.kachinglib.utils
 
 import kotlin.contracts.ExperimentalContracts
@@ -10,6 +8,8 @@ actual interface ICloseable {
 	actual fun close()
 }
 
+@Suppress("unused")
+@OptIn(ExperimentalContracts::class)
 actual inline fun <T : ICloseable?, R> T.use(block: (T) -> R): R {
 	contract {
 		callsInPlace(block, InvocationKind.EXACTLY_ONCE)

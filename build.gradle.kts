@@ -1,9 +1,10 @@
 @file:Suppress("UNUSED_VARIABLE")
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	apply {
-		kotlin("multiplatform") version "1.6.10"
-		kotlin("plugin.serialization") version "1.6.10"
+		kotlin("multiplatform") version "1.6.21"
 		`maven-publish`
 	}
 }
@@ -20,11 +21,18 @@ java {
 	targetCompatibility = JavaVersion.VERSION_11
 }
 
-
+val commonCompileArgs = listOf(
+	"-opt-in=kotlin.RequiresOptIn",
+	"-Xuse-experimental=io.ktor.locations.KtorExperimentalLocationsAPI",
+)
+tasks.withType(KotlinCompile::class).all {
+	kotlinOptions.freeCompilerArgs += commonCompileArgs
+}
 kotlin {
 	jvm {
 		compilations.all {
 			kotlinOptions.jvmTarget = "11"
+			kotlinOptions.freeCompilerArgs += commonCompileArgs
 		}
 		withJava()
 		testRuns["test"].executionTask.configure {
@@ -32,6 +40,9 @@ kotlin {
 		}
 	}
 	js(BOTH) {
+		compilations.all {
+			kotlinOptions.freeCompilerArgs += commonCompileArgs
+		}
 		browser {
 			testTask {
 				useMocha {
