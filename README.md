@@ -1,3 +1,6 @@
+[![](https://jitpack.io/v/YuryMikhailuts/kaching-lib.svg)](https://jitpack.io/#YuryMikhailuts/kaching-lib)
+
+
 # KachingLib
 
 Библиотека для Kotlin, посвящённая кешированию объектов. Предназначена, в основном, для уменьшения количества повторяющихся запросов куда бы то ни было.
