@@ -52,7 +52,13 @@ open class BufferedCache<TKey, TValue : Any?>(
 
 	protected open class OrderItem<T>(val item: T, val lastUpdate: Instant = Clock.System.now()) :
 			Comparable<OrderItem<T>> {
-		override fun compareTo(other: OrderItem<T>): Int = lastUpdate.compareTo(other.lastUpdate)
+		@Suppress("RedundantNullableReturnType")
+		override fun compareTo(other: OrderItem<T>): Int {
+			// WARNING: Вся эта чехорда с насильной проверкой на null нужна по причине того, что некоторые классы в JS совершенно игнорируют null безопасность kotlin.
+			val otherItem: OrderItem<T>? = other
+			val thisItem: OrderItem<T>? = this
+			return otherItem?.let { lastUpdate.compareTo(it.lastUpdate) } ?: (if (thisItem == null) 0 else 1)
+		}
 		override fun equals(other: Any?): Boolean = lastUpdate == (other as? OrderItem<*>?)?.lastUpdate
 		override fun hashCode(): Int = lastUpdate.hashCode()
 	}
