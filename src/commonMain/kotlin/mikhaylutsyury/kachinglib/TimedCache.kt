@@ -3,6 +3,9 @@ package mikhaylutsyury.kachinglib
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock
 import kotlin.time.Duration
@@ -22,8 +25,10 @@ class TimedCache<TKey, TValue : Any?>(
 	override var capacity: Int? = null,
 	val mode: TimedCacheMode = TimedCacheMode.RelevanceMode,
 	dispatcher: CoroutineDispatcher = Dispatchers.Default,
+	getterList: (suspend (Iterable<TKey>) -> Map<TKey, TValue>)? = null,
+	getListChunkedBy: UInt? = null,
 	getter: suspend (TKey) -> TValue,
-) : BufferedCache<TKey, TValue>(capacity, dispatcher, getter), ICache<TKey, TValue> {
+) : BufferedCache<TKey, TValue>(capacity, dispatcher, getterList, getListChunkedBy, getter), ICache<TKey, TValue> {
 	override suspend fun dropOldItems() {
 		val capacity = this.capacity
 		val capacityIsNull = capacity != null
@@ -43,6 +48,27 @@ class TimedCache<TKey, TValue : Any?>(
 				break
 			}
 		}
+	}
+
+	@Suppress("DuplicatedCode")
+	override suspend fun getAll(vararg keys: TKey): List<TValue> {
+		val (localMap, remoteKeys) = mutex.withLock {
+			val keysSet = keys.toSet()
+			val localKeys = map.keys intersect keysSet
+			val remoteKeys = keysSet - localKeys
+			val localMap = localKeys.associateWith { map.getValue(it) }
+			if (mode == TimedCacheMode.RelevanceMode) localMap.forEach { (key, value) -> updateOrder(key, value) }
+			if (remoteKeys.isEmpty()) return keys.asFlow().map { localMap.getValue(it) }.toList()
+			localMap to remoteKeys
+		}
+		val values = getList(remoteKeys)
+		mutex.withLock {
+			values.forEach { (key, value) -> updateOrder(key, value) }
+			map.putAll(values)
+			dropOldItems()
+		}
+		val result = localMap + values
+		return keys.asFlow().map { result.getValue(it) }.toList()
 	}
 
 	override suspend fun get(key: TKey): TValue {
