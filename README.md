@@ -41,11 +41,11 @@ allprojects {
 ```groovy
 dependencies {
     // Kotlin multiplatform common
-    implementation 'com.github.YuryMikhailuts.kaching-lib:KachingLib:1.0.2-SNAPSHOT'
+    implementation 'com.github.YuryMikhailuts.kaching-lib:KachingLib:1.1-SNAPSHOT'
     // Kotlin multiplatform JS
-    implementation 'com.github.YuryMikhailuts.kaching-lib:KachingLib-js:1.0.2-SNAPSHOT'
+    implementation 'com.github.YuryMikhailuts.kaching-lib:KachingLib-js:1.1-SNAPSHOT'
     // Kotlin multiplatform JVM
-    implementation 'com.github.YuryMikhailuts.kaching-lib:KachingLib-jvm:1.0.2-SNAPSHOT'
+    implementation 'com.github.YuryMikhailuts.kaching-lib:KachingLib-jvm:1.1-SNAPSHOT'
 }
 ```
 
@@ -54,10 +54,10 @@ dependencies {
 ```kotlin
 dependencies {
     // Kotlin multiplatform common
-    implementation("com.github.YuryMikhailuts.kaching-lib:KachingLib:1.0.2-SNAPSHOT")
+    implementation("com.github.YuryMikhailuts.kaching-lib:KachingLib:1.1-SNAPSHOT")
     // Kotlin multiplatform JS
-    implementation("com.github.YuryMikhailuts.kaching-lib:KachingLib-js:1.0.2-SNAPSHOT")
+    implementation("com.github.YuryMikhailuts.kaching-lib:KachingLib-js:1.1-SNAPSHOT")
     // Kotlin multiplatform JVM
-    implementation("com.github.YuryMikhailuts.kaching-lib:KachingLib-jvm:1.0.2-SNAPSHOT")
+    implementation("com.github.YuryMikhailuts.kaching-lib:KachingLib-jvm:1.1-SNAPSHOT")
 }
 ```
